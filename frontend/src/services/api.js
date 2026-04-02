@@ -11,7 +11,7 @@ export const getToken = () => localStorage.getItem("ves_token");
 export const setToken = (t) => localStorage.setItem("ves_token", t);
 export const clearToken = () => localStorage.removeItem("ves_token");
 
-// ─── Core fetch wrapper ───────────────────────────────────────────────────────
+// ─── Core fetch wrapper--------------------------------------------------------------//
 async function request(path, options = {}) {
   const token = getToken();
   const headers = {
