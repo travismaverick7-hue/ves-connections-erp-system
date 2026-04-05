@@ -3,7 +3,6 @@ const pool = require('../../config/db');
 
 /**
  * Verifies JWT token from Authorization header.
- * Attaches decoded user to req.user.
  */
 async function authenticate(req, res, next) {
   try {
