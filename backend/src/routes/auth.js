@@ -7,7 +7,7 @@ const pool    = require('../../config/db');
 const { authenticate } = require('../middleware/auth');
 const { auditLog }     = require('../middleware/errorHandler');
 
-// ── POST /api/auth/login ───────────────────────────────────────────────────────
+//--------------POST /api/auth/login-------------//
 router.post('/login',
   [
     body('username').trim().notEmpty().withMessage('Username is required'),
@@ -33,7 +33,7 @@ router.post('/login',
 
       const user = result.rows[0];
 
-      // ── Check account lockout ──────────────────────────────────────────────
+      //---------------Check account lockout----------------//
       if (user.locked_until && new Date(user.locked_until) > new Date()) {
         const minutesLeft = Math.ceil((new Date(user.locked_until) - Date.now()) / 60000);
         return res.status(403).json({
@@ -47,7 +47,7 @@ router.post('/login',
       const match = await bcrypt.compare(password, user.password_hash);
 
       if (!match) {
-        // Increment failed attempts; lock after 5
+        //-------------Increment failed attempts- lock after 5-----------//
         const newAttempts = (user.failed_attempts || 0) + 1;
         const lockUntil   = newAttempts >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : null; // 30-min lockout
         await pool.query(
@@ -64,7 +64,7 @@ router.post('/login',
         });
       }
 
-      // ── Successful login ───────────────────────────────────────────────────
+      //------------Successful login---------------//
       await pool.query(
         `UPDATE users SET failed_attempts = 0, locked_until = NULL, last_login = NOW() WHERE id = $1`,
         [user.id]
@@ -98,12 +98,12 @@ router.post('/login',
   }
 );
 
-// ── GET /api/auth/me ───────────────────────────────────────────────────────────
+//------------GET /api/auth/me--------------//
 router.get('/me', authenticate, (req, res) => {
   res.json({ success: true, user: req.user });
 });
 
-// ── PUT /api/auth/change-password ─────────────────────────────────────────────
+//---------------PUT /api/auth/change-password---------------//
 router.put('/change-password',
   authenticate,
   [
