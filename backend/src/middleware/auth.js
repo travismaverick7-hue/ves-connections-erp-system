@@ -34,9 +34,8 @@ async function authenticate(req, res, next) {
   }
 }
 
-/**
+/*
  * Restricts route to specific roles.
- * Usage: authorize('Admin') or authorize('Admin', 'Manager')
  */
 function authorize(...roles) {
   return (req, res, next) => {
