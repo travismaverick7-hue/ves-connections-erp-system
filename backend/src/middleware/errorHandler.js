@@ -1,10 +1,10 @@
 const pool = require('../../config/db');
 
-// ── Global error handler ──────────────────────────────────────────────────────
+//--------Global error handler--------//
 function errorHandler(err, req, res, next) {
   console.error(`[${new Date().toISOString()}] ERROR:`, err.message);
 
-  // Postgres constraint violations
+  //----Postgres constraint violations--------//
   if (err.code === '23505') {
     return res.status(409).json({ success: false, message: 'Duplicate entry — record already exists.' });
   }
@@ -23,12 +23,12 @@ function errorHandler(err, req, res, next) {
   });
 }
 
-// ── 404 handler ───────────────────────────────────────────────────────────────
+//----------Error 404 handler-----------//
 function notFound(req, res) {
   res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found.` });
 }
 
-// ── Audit logger ──────────────────────────────────────────────────────────────
+//-------------Audit logger-------------//
 async function auditLog(userId, userName, action, entity = null, entityId = null, details = null, ip = null) {
   try {
     await pool.query(
